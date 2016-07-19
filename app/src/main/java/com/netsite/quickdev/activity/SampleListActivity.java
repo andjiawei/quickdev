@@ -2,7 +2,6 @@ package com.netsite.quickdev.activity;
 
 import android.os.Bundle;
 import android.support.v4.widget.SwipeRefreshLayout;
-import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -10,15 +9,11 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.netsite.quickdev.R;
-import com.netsite.quickdev.core.BaseActivity;
 
 import java.util.ArrayList;
 
-public class SampleListActivity extends BaseActivity implements SwipeRefreshLayout.OnRefreshListener {
+public class SampleListActivity extends BaseListActivity implements SwipeRefreshLayout.OnRefreshListener {
 
-    private SwipeRefreshLayout mSwipeRefreshLayout;
-    private RecyclerView mRecyclerView;
-    private SampleListAdapter adapter;
     private ArrayList<String> mDataList = new ArrayList<>();
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -30,26 +25,16 @@ public class SampleListActivity extends BaseActivity implements SwipeRefreshLayo
     }
 
     @Override
-    protected void setUpData() {
-        mRecyclerView.setLayoutManager(new LinearLayoutManager(getApplicationContext()));
-        adapter = new SampleListAdapter();
-        mRecyclerView.setAdapter(adapter);
-        mSwipeRefreshLayout.post(new Runnable() {
-            @Override
-            public void run() {
-                mSwipeRefreshLayout.setRefreshing(true);
-                onRefresh();
-            }
-        });
+    protected void setUpView() {
+        super.setUpView();
     }
 
     @Override
-    protected void setUpView() {
-        mSwipeRefreshLayout = (SwipeRefreshLayout) findViewById(R.id.swipeRefreshLayout);
-        mSwipeRefreshLayout.setOnRefreshListener(this);
-        mRecyclerView = (RecyclerView) findViewById(R.id.recycleView);
-
+    protected void setUpData() {
+        super.setUpData();
+        setRefreshing();
     }
+
 
     @Override
     public void onRefresh() {
@@ -61,24 +46,20 @@ public class SampleListActivity extends BaseActivity implements SwipeRefreshLayo
         mSwipeRefreshLayout.setRefreshing(false);
     }
 
-    class SampleListAdapter extends RecyclerView.Adapter<SampleViewHolder>{
+    @Override
+    protected void onBind(RecyclerView.ViewHolder holder, int position) {
+        ((SampleViewHolder)holder).mSampleListItemLabel.setText(mDataList.get(position));
+    }
 
-        @Override
-        public SampleViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-            View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.activity_sample_list_item, parent, false);
+    @Override
+    protected int getCount() {
+        return  mDataList==null?0:mDataList.size();
+    }
 
-            return new SampleViewHolder(view);
-        }
-
-        @Override
-        public void onBindViewHolder(SampleViewHolder holder, int position) {
-            holder.mSampleListItemLabel.setText(mDataList.get(position));
-        }
-
-        @Override
-        public int getItemCount() {
-            return mDataList==null?0:mDataList.size();
-        }
+    @Override
+    protected RecyclerView.ViewHolder getViewHolder(ViewGroup parent, int viewType) {
+        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.activity_sample_list_item, parent, false);
+        return new SampleViewHolder(view);
     }
 
     class SampleViewHolder extends RecyclerView.ViewHolder{
