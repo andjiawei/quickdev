@@ -1,6 +1,7 @@
 package com.netsite.quickdev.activity;
 
 import android.content.Intent;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 
@@ -51,5 +52,18 @@ public class HomeActivity extends BaseActivity implements View.OnClickListener {
     protected void protectApp() {
         startActivity(new Intent(this, SplashActivity.class));
         finish();
+    }
+
+    @Override
+    public boolean onMenuItemClick(MenuItem item) {
+
+        int itemId = item.getItemId();
+        switch (itemId){
+            case R.id.test1:
+                startActivity(new Intent(this,SampleListActivity.class));
+            break;
+        }
+
+        return super.onMenuItemClick(item);
     }
 }

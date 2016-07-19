@@ -1,7 +1,6 @@
 package com.netsite.quickdev.core;
 
 import android.content.Intent;
-import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.LayoutRes;
 import android.support.v7.app.AppCompatActivity;
@@ -48,12 +47,18 @@ public class BaseActivity extends AppCompatActivity implements Toolbar.OnMenuIte
             case ConstantValues.STATUS_LOGOUT:
             case ConstantValues.STATUS_OFFLINE:
             case ConstantValues.STATUS_ONLINE:
+                setUpContentView();
+                setUpView();
                 setUpData();
                 break;
         }
 
     }
 
+    protected void setUpView() {}
+
+    protected void setUpContentView() {}
+    protected void setUpData() {}
     protected void protectApp() {
         Intent intent = new Intent(this, HomeActivity.class);
         intent.putExtra(ConstantValues.KEY_HOME_ACTION, ConstantValues.ACTION_RESTART_APP);
@@ -67,7 +72,7 @@ public class BaseActivity extends AppCompatActivity implements Toolbar.OnMenuIte
         startActivity(intent);
     }
 
-    protected void setUpData() {}
+
 
     @Override
     public void setContentView(@LayoutRes int layoutResID) {
@@ -94,7 +99,6 @@ public class BaseActivity extends AppCompatActivity implements Toolbar.OnMenuIte
         if (mode != MODE_NONE) {
             toolbar = (Toolbar) findViewById(R.id.toolbar);
             toolbar.setTitle("");
-            toolbar.setBackgroundColor(Color.BLACK);
             toolbar_title = (TextView) findViewById(R.id.toolbar_title);
 
             if (mode == MODE_BACK) {
