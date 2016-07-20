@@ -1,4 +1,4 @@
-package com.netsite.quickdev.activity;
+package com.netsite.quickdev.core;
 
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -8,13 +8,16 @@ import android.support.v7.widget.RecyclerView;
 import android.view.ViewGroup;
 
 import com.netsite.quickdev.R;
-import com.netsite.quickdev.core.BaseActivity;
 
-public abstract class BaseListActivity extends BaseActivity implements SwipeRefreshLayout.OnRefreshListener {
+import java.util.ArrayList;
+
+public abstract class BaseListActivity<T> extends BaseActivity implements SwipeRefreshLayout.OnRefreshListener {
 
     protected SwipeRefreshLayout mSwipeRefreshLayout;
     protected RecyclerView mRecyclerView;
     protected SampleListAdapter adapter;
+    protected ArrayList<T> mDataList;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -23,11 +26,25 @@ public abstract class BaseListActivity extends BaseActivity implements SwipeRefr
     @Override
     protected void setUpData() {
         mRecyclerView.setLayoutManager(getLayoutManager());
+        RecyclerView.ItemDecoration decoration = getItemDecoration();
+        if (decoration!=null) {
+            mRecyclerView.addItemDecoration(decoration);
+        }
         adapter = new SampleListAdapter();
         mRecyclerView.setAdapter(adapter);
     }
 
-    protected void setRefreshing(){
+    protected RecyclerView.ItemDecoration getItemDecoration() {
+        return new DividerItemDecoration(getApplicationContext(), R.drawable.list_divider);
+
+    }
+
+    @Override
+    protected void setUpContentView() {
+        setContentView(R.layout.activity_sample_list, -1);
+    }
+
+    protected void setRefreshing() {
         mSwipeRefreshLayout.post(new Runnable() {
             @Override
             public void run() {
@@ -51,28 +68,32 @@ public abstract class BaseListActivity extends BaseActivity implements SwipeRefr
     }
 
 
-    public class SampleListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>{
+    public class SampleListAdapter extends RecyclerView.Adapter<BaseViewHolder> {
 
         @Override
-        public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+        public BaseViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
 
-            return getViewHolder(parent,viewType);
+            return getViewHolder(parent, viewType);
         }
 
         @Override
-        public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
-           onBind(holder,position);
+        public void onBindViewHolder(BaseViewHolder holder, int position) {
+            holder.onBind(position);
         }
 
         @Override
         public int getItemCount() {
-            return getCount();
+            return mDataList == null ? 0 : mDataList.size();
+        }
+
+        @Override
+        public int getItemViewType(int position) {
+            return getItemType(position);
         }
     }
+    protected int getItemType(int position) {
+        return 0;
+    }
 
-    protected abstract void onBind(RecyclerView.ViewHolder holder, int position);
-
-    protected abstract int getCount();
-
-    protected abstract RecyclerView.ViewHolder getViewHolder(ViewGroup parent, int viewType) ;
+    protected abstract BaseViewHolder getViewHolder(ViewGroup parent, int viewType);
 }
