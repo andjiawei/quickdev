@@ -2,21 +2,20 @@ package com.netsite.quickdev.core;
 
 import android.os.Bundle;
 import android.support.annotation.NonNull;
-import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.ViewGroup;
 
 import com.netsite.quickdev.R;
+import com.netsite.quickdev.widget.PullToRefreshRecycler;
 
 import java.util.ArrayList;
 
-public abstract class BaseListActivity<T> extends BaseActivity implements SwipeRefreshLayout.OnRefreshListener {
+public abstract class BaseListActivity<T> extends BaseActivity implements PullToRefreshRecycler.OnRecyclerRefreshListener {
 
-    protected SwipeRefreshLayout mSwipeRefreshLayout;
-    protected RecyclerView mRecyclerView;
-    protected SampleListAdapter adapter;
+    protected BaseListAdapter adapter;
     protected ArrayList<T> mDataList;
+    protected PullToRefreshRecycler recycler;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -25,13 +24,12 @@ public abstract class BaseListActivity<T> extends BaseActivity implements SwipeR
 
     @Override
     protected void setUpData() {
-        mRecyclerView.setLayoutManager(getLayoutManager());
-        RecyclerView.ItemDecoration decoration = getItemDecoration();
-        if (decoration!=null) {
-            mRecyclerView.addItemDecoration(decoration);
-        }
-        adapter = new SampleListAdapter();
-        mRecyclerView.setAdapter(adapter);
+
+        recycler.setOnRefreshListener(this);
+        recycler.setLayoutManager(getLayoutManager());
+        recycler.addItemDecoration(getItemDecoration());
+        adapter = new BaseListAdapter();
+        recycler.setAdapter(adapter);
     }
 
     protected RecyclerView.ItemDecoration getItemDecoration() {
@@ -44,16 +42,6 @@ public abstract class BaseListActivity<T> extends BaseActivity implements SwipeR
         setContentView(R.layout.activity_sample_list, -1);
     }
 
-    protected void setRefreshing() {
-        mSwipeRefreshLayout.post(new Runnable() {
-            @Override
-            public void run() {
-                mSwipeRefreshLayout.setRefreshing(true);
-                onRefresh();
-            }
-        });
-    }
-
     @NonNull
     private LinearLayoutManager getLayoutManager() {
         return new LinearLayoutManager(getApplicationContext());
@@ -61,18 +49,13 @@ public abstract class BaseListActivity<T> extends BaseActivity implements SwipeR
 
     @Override
     protected void setUpView() {
-        mSwipeRefreshLayout = (SwipeRefreshLayout) findViewById(R.id.swipeRefreshLayout);
-        mSwipeRefreshLayout.setOnRefreshListener(this);
-        mRecyclerView = (RecyclerView) findViewById(R.id.recycleView);
-
+        recycler = (PullToRefreshRecycler) findViewById(R.id.pullToRefreshRecycler);
     }
 
-
-    public class SampleListAdapter extends RecyclerView.Adapter<BaseViewHolder> {
+    public class BaseListAdapter extends RecyclerView.Adapter<BaseViewHolder> {
 
         @Override
         public BaseViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-
             return getViewHolder(parent, viewType);
         }
 

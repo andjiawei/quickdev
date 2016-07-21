@@ -20,7 +20,7 @@
         <item name="android:textColorPrimary">@color/grey</item>
     </style>
 
-    <style name="RecycleStyle">
+    <style name="RecyclerStyle">
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">match_parent</item>
         <item name="android:overScrollMode">never</item>

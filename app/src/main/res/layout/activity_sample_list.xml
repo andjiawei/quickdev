@@ -8,19 +8,13 @@
 
     <include layout="@layout/widget_toolbar"/>
 
-    <android.support.v4.widget.SwipeRefreshLayout
-        android:id="@+id/swipeRefreshLayout"
+
+    <com.netsite.quickdev.widget.PullToRefreshRecycler
+        android:id="@id/pullToRefreshRecycler"
         android:layout_below="@id/toolbar"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-        <android.support.v7.widget.RecyclerView
-            android:id="@id/recycleView"
-            style="@style/RecycleStyle">
-
-        </android.support.v7.widget.RecyclerView>
-
-    </android.support.v4.widget.SwipeRefreshLayout>
-
+    </com.netsite.quickdev.widget.PullToRefreshRecycler>
 
 </RelativeLayout>

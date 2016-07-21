@@ -1,7 +1,6 @@
 package com.netsite.quickdev.activity;
 
 import android.os.Bundle;
-import android.support.v4.widget.SwipeRefreshLayout;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,8 +12,7 @@ import com.netsite.quickdev.core.BaseViewHolder;
 
 import java.util.ArrayList;
 
-public class SampleListActivity extends BaseListActivity<String> implements SwipeRefreshLayout.OnRefreshListener {
-
+public class SampleListActivity extends BaseListActivity<String> {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -35,24 +33,24 @@ public class SampleListActivity extends BaseListActivity<String> implements Swip
     @Override
     protected void setUpData() {
         super.setUpData();
-        setRefreshing();
-    }
-
-    @Override
-    public void onRefresh() {
-        mDataList = new ArrayList<>();
-        mDataList.clear();
-        for (int i = 0; i < 50; i++) {
-            mDataList.add("sample list item " + i);
-        }
-        adapter.notifyDataSetChanged();
-        mSwipeRefreshLayout.setRefreshing(false);
+        recycler.setRefreshing();
     }
 
     @Override
     protected BaseViewHolder getViewHolder(ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.activity_sample_list_item, parent, false);
         return new SampleViewHolder(view);
+    }
+
+    @Override
+    public void onRefresh(int action) {
+        mDataList = new ArrayList<>();
+        mDataList.clear();
+        for (int i = 0; i < 50; i++) {
+            mDataList.add("sample list item " + i);
+        }
+        adapter.notifyDataSetChanged();
+        recycler.onRefreshCompleted();
     }
 
     class SampleViewHolder extends BaseViewHolder{
