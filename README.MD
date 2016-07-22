@@ -14,3 +14,11 @@
     1 BaseViewHolder
     2 增加分割线
     
+### 第五次提交 RecyclerView和SwipeReflashLayout合并
+        1 组合为一个控件，外部只需set相应属性集合。
+        
+### 第六次提交 加载更多的简单实现
+    仅增加逻辑 没有footView布局
+    在onRefresh方法中 根据状态判断 刷新或加载更多，加载更多根据RecyvlerView的OnScrollChanger的监听判断，到底部时加载
+    
+    

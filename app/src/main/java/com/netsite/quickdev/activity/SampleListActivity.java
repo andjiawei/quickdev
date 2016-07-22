@@ -9,6 +9,7 @@ import android.widget.TextView;
 import com.netsite.quickdev.R;
 import com.netsite.quickdev.core.BaseListActivity;
 import com.netsite.quickdev.core.BaseViewHolder;
+import com.netsite.quickdev.widget.PullToRefreshRecycler;
 
 import java.util.ArrayList;
 
@@ -44,13 +45,24 @@ public class SampleListActivity extends BaseListActivity<String> {
 
     @Override
     public void onRefresh(int action) {
-        mDataList = new ArrayList<>();
-        mDataList.clear();
-        for (int i = 0; i < 50; i++) {
+
+        if (mDataList == null) {
+            mDataList = new ArrayList<>();
+        }
+        if (action == PullToRefreshRecycler.ACTION_PULL_TO_REFRESH) {
+            mDataList.clear();
+        }
+        int size = mDataList.size();
+        for (int i = size; i < size + 20; i++) {
             mDataList.add("sample list item " + i);
         }
         adapter.notifyDataSetChanged();
         recycler.onRefreshCompleted();
+        if (mDataList.size() < 100) {
+            recycler.enableLoadMore(true);
+        } else {
+            recycler.enableLoadMore(false);
+        }
     }
 
     class SampleViewHolder extends BaseViewHolder{

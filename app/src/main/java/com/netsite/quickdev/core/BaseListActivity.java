@@ -2,11 +2,12 @@ package com.netsite.quickdev.core;
 
 import android.os.Bundle;
 import android.support.annotation.NonNull;
-import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.ViewGroup;
 
 import com.netsite.quickdev.R;
+import com.netsite.quickdev.widget.ILayoutManager;
+import com.netsite.quickdev.widget.MyLinearLayoutManager;
 import com.netsite.quickdev.widget.PullToRefreshRecycler;
 
 import java.util.ArrayList;
@@ -43,8 +44,8 @@ public abstract class BaseListActivity<T> extends BaseActivity implements PullTo
     }
 
     @NonNull
-    private LinearLayoutManager getLayoutManager() {
-        return new LinearLayoutManager(getApplicationContext());
+    private ILayoutManager getLayoutManager() {
+        return new MyLinearLayoutManager(getApplicationContext());
     }
 
     @Override
