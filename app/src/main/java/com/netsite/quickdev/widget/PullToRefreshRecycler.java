@@ -8,6 +8,7 @@ import android.view.LayoutInflater;
 import android.widget.FrameLayout;
 
 import com.netsite.quickdev.R;
+import com.netsite.quickdev.core.BaseListActivity;
 
 /**
  * Created by QYer on 2016/7/20.
@@ -26,6 +27,7 @@ public class PullToRefreshRecycler extends FrameLayout implements SwipeRefreshLa
     private int mCurrentState;
 
     private ILayoutManager mLayoutManager;
+    private BaseListActivity.BaseListAdapter adapter;
 
     public PullToRefreshRecycler(Context context) {
         super(context);
@@ -60,6 +62,7 @@ public class PullToRefreshRecycler extends FrameLayout implements SwipeRefreshLa
                 //如果没在刷新 & 可加载更多 & 到达底部 就加载更多
                 if(mCurrentState == ACTION_IDLE && isLoadMoreEnabled && checkIfLoadMore()){
                     mCurrentState = ACTION_LOAD_MORE_REFRESH;//改变状态为加载更多 防止onScrolled多次调用
+                    adapter.showLoadMoreFooter(true);//在滚动的时候插入LoadMoreView
                     mSwipeRefreshLayout.setEnabled(false);//加载更多时下拉刷新不可用
                     listener.onRefresh(ACTION_LOAD_MORE_REFRESH);//开始加载更多
                 }
@@ -89,7 +92,8 @@ public class PullToRefreshRecycler extends FrameLayout implements SwipeRefreshLa
         }
     }
 
-    public void setAdapter(RecyclerView.Adapter adapter){
+    public void setAdapter(BaseListActivity.BaseListAdapter adapter){
+        this.adapter = adapter;
         mRecyclerView.setAdapter(adapter);
     }
 
@@ -124,8 +128,9 @@ public class PullToRefreshRecycler extends FrameLayout implements SwipeRefreshLa
                 break;
             case ACTION_LOAD_MORE_REFRESH:
                 if (isPullToRefreshEnabled) {
-                    mSwipeRefreshLayout.setEnabled(true);//加载完 重启下拉刷新
+                    mSwipeRefreshLayout.setEnabled(true);//加载完 下拉刷新变为可用
                 }
+                adapter.showLoadMoreFooter(false);//加载完移除FootView
                 break;
         }
         mCurrentState = ACTION_IDLE;//完成 重置状态为空闲

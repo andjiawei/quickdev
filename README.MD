@@ -21,4 +21,8 @@
     仅增加逻辑 没有footView布局
     在onRefresh方法中 根据状态判断 刷新或加载更多，加载更多根据RecyvlerView的OnScrollChanger的监听判断，到底部时加载
     
+### 第七次提交 加入foot布局
+    只是一个"加载更多"文字提示，通过insert和remove底部view实现
+   
+    
     

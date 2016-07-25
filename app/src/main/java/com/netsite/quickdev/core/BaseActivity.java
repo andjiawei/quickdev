@@ -72,8 +72,6 @@ public class BaseActivity extends AppCompatActivity implements Toolbar.OnMenuIte
         startActivity(intent);
     }
 
-
-
     @Override
     public void setContentView(@LayoutRes int layoutResID) {
         setContentView(layoutResID, -1, -1, MODE_BACK);

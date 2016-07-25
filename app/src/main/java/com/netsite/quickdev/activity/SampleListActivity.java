@@ -44,28 +44,34 @@ public class SampleListActivity extends BaseListActivity<String> {
     }
 
     @Override
-    public void onRefresh(int action) {
+    public void onRefresh(final int action) {
 
         if (mDataList == null) {
             mDataList = new ArrayList<>();
         }
-        if (action == PullToRefreshRecycler.ACTION_PULL_TO_REFRESH) {
-            mDataList.clear();
-        }
-        int size = mDataList.size();
-        for (int i = size; i < size + 20; i++) {
-            mDataList.add("sample list item " + i);
-        }
-        adapter.notifyDataSetChanged();
-        recycler.onRefreshCompleted();
-        if (mDataList.size() < 100) {
-            recycler.enableLoadMore(true);
-        } else {
-            recycler.enableLoadMore(false);
-        }
+
+        recycler.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                if (action == PullToRefreshRecycler.ACTION_PULL_TO_REFRESH) {
+                    mDataList.clear();
+                }
+                int size = mDataList.size();
+                for (int i = size; i < size + 20; i++) {
+                    mDataList.add("sample list item " + i);
+                }
+                adapter.notifyDataSetChanged();
+                recycler.onRefreshCompleted();
+                if (mDataList.size() < 100) {
+                    recycler.enableLoadMore(true);
+                } else {
+                    recycler.enableLoadMore(false);
+                }
+            }
+        }, 1500);
     }
 
-    class SampleViewHolder extends BaseViewHolder{
+    class SampleViewHolder extends BaseViewHolder {
 
         TextView mSampleListItemLabel;
 
@@ -75,7 +81,7 @@ public class SampleListActivity extends BaseListActivity<String> {
         }
 
         @Override
-        protected void onBind(int position) {
+        public void onBindViewHolder(int position) {
             mSampleListItemLabel.setText(mDataList.get(position));
         }
     }
